@@ -1,8 +1,24 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Login = () => {
 	const [userName, setUserName] = useState('');
 	const [password, setPassword] = useState('');
+
+	const onClickBtn = async (e) => {
+		await axios
+			.post('http://localhost:8000/login', {
+				name: userName,
+				password: password,
+			})
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
 	return (
 		<>
 			<div className='userName'>
@@ -25,6 +41,13 @@ const Login = () => {
 						className='password'
 					/>
 				</div>
+			</div>
+			<div>
+				<input
+					type='button'
+					value='login'
+					className='login'
+					onClick={onClickBtn}></input>
 			</div>
 		</>
 	);
