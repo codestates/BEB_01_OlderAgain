@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 
 const Login = () => {
 	const [userName, setUserName] = useState('');
@@ -7,9 +9,9 @@ const Login = () => {
 
 	const onClickBtn = async (e) => {
 		await axios
-			.post('http://localhost:8000/login', {
-				name: userName,
-				password: password,
+			.post('http://localhost:8888/app/signup', {
+				"username": userName,
+				"password": password,
 			})
 			.then((res) => {
 				console.log(res);
@@ -48,6 +50,14 @@ const Login = () => {
 					value='login'
 					className='login'
 					onClick={onClickBtn}></input>
+				
+				<Link to='/signup'>
+				<input
+					type='button'
+					value='Go To SignUp'
+					className='signup'>
+				</input>
+				</Link>
 			</div>
 		</>
 	);
