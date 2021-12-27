@@ -2,6 +2,7 @@ import './App.css';
 import React from 'react';
 import Login from './views/login';
 import Main from './views/main';
+import SignUp from './views/signup';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
 		<BrowserRouter>
 			<Routes>
 				<Route path='/' element={<Login />} exact />
+				<Route path='signup' element={<SignUp/>} exact />
 				<Route path='/main' element={<Main />} exact />
 				{/* <Route path='users/*' element={<Users />} /> */}
 			</Routes>

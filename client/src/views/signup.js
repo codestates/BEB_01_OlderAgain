@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 
-const Login = () => {
+const SignUp = () => {
 	const [userName, setUserName] = useState('');
 	const [password, setPassword] = useState('');
 
@@ -45,22 +45,17 @@ const Login = () => {
 				</div>
 			</div>
 			<div>
-				<input
+                <Link to='/'>
+                <input
 					type='button'
-					value='login'
-					className='login'
+					value='Sign Up'
+					className='signup'
 					onClick={onClickBtn}></input>
+                </Link>
 				
-				<Link to='/signup'>
-				<input
-					type='button'
-					value='Go To SignUp'
-					className='signup'>
-				</input>
-				</Link>
 			</div>
 		</>
 	);
 };
 
-export default Login;
+export default SignUp;
