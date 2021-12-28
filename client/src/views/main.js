@@ -1,132 +1,88 @@
+// import axios from 'axios';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Main = () => {
-	const [contents, setContents] = useState('all');
-	const [userName, setUserName] = useState('');
+	const [lastIdx, setLastIdx] = useState(0);
 	const [inputData, setInputData] = useState([
 		{
-			id: '',
-			content: '',
-			userName: '',
+			// idx: '',
+			title: '',
+			username: '',
 			address: '',
 			write_date: '',
+			content: '',
 		},
 	]);
-	const [lastIdx, setLastIdx] = useState(0);
-
-	// useEffect(async () => {
-	// 	axios.get('');
-	// });
-
-	const onClickBtn = async (e) => {
-		console.log('aa');
-		// await axios
-		// 	.post('http://localhost:8000/write', {
-		// 		// userName:
-		// 	})
-		// 	.then((res) => {
-		// 		console.log(res);
-		// 	})
-		// 	.catch((err) => {
-		// 		console.log(err);
-		// 	});
-	};
 
 	useEffect(async () => {
 		try {
-			const res = await axios.get('http://localhost:8000/contents');
-			const _inputData = await res.data.map(
-				(rowData) => (
-					// rowData 의 갯수만큼 증가
-					setLastIdx(lastIdx + 1),
-					{
-						id: rowData.id,
-						content: rowData.content,
-						userName: rowData.userName,
-						write_date: rowData.write_date,
-					}
-				)
+			const res = await axios.get(
+				'http://localhost:8888/app/contentList'
 			);
+			const _inputData = await res.data.map((rowData) => ({
+				// idx: rowData.idx,
+				title: rowData.title,
+				username: rowData.username,
+				address: rowData.address,
+				write_date: rowData.date,
+				content: rowData.content,
+			}));
 			setInputData(inputData.concat(_inputData));
-		} catch (e) {
-			console.error(e.message);
+		} catch (err) {
+			console.log(err);
 		}
 	}, []);
 
+	console.log(inputData);
+
+	// const onClickBtn = async (e) => {
+	// 	console.log('aa');
+	// 	await axios
+	// 		.post('http://localhost:8000/write', {
+	// 			// userName:
+	// 		})
+	// 		.then((res) => {
+	// 			console.log(res);
+	// 		})
+	// 		.catch((err) => {
+	// 			console.log(err);
+	// 		});
+	// };
+
 	return (
 		<div>
-			<h2>글 리스트</h2>
+			<h2>메인 화면</h2>
 			<table className='listTable'>
 				<tbody>
+					{/* <div>글 리스트</div> */}
 					<tr>
 						<td className='listTableIndex th'>index</td>
 						<td className='listTableTitle th'>title</td>
+						<td className='listTableTitle th'>contents</td>
 					</tr>
-					// rowData 가 없으면 '작성된 글이 없습니다'를 나타냄
-					{lastIdx !== 0 ? (
-						inputData.map(
-							(rowData) =>
-								// 최초 선언한 기본값은 나타내지 않음
-								rowData.idx !== '' && (
-									<tr>
-										<td className='listTableIndex'>
-											// router 로 이동 시 idx값을 param
-											으로 전달
-											{/* <Link
-												to={`/BoardContent/${rowData.idx}`}>
-												{rowData.idx}
-											</Link> */}
-										</td>
-										<td className='listTableTitle'>
-											{/* <Link
-												to={`/BoardContent/${rowData.idx}`}>
-												{rowData.title}
-											</Link> */}
-										</td>
-									</tr>
-								)
-						)
-					) : (
-						<tr>
-							<td className='listTableIndex'></td>
-							<td className='listTableTitle noData'>
-								작성된 글이 없습니다.
-							</td>
-						</tr>
-					)}
 				</tbody>
 			</table>
-			<body>
-				<div className='content'>
-					글 내용
-					<input
-						type='text'
-						value={contents}
-						onChange={(e) => {
-							setContents(e.target.value);
-						}}
-						className='content'></input>
-				</div>
-				<div className='userName'>
-					아이디
-					<input
-						type='text'
-						value={userName}
-						onChange={(e) => {
-							setUserName(e.target.value);
-						}}
-						className='userName'></input>
-				</div>
-				<div>
-					글작성
+			<div>글 리스트</div>
+			{inputData.map((rowData) => (
+				<tr>
+					<td>{rowData.title}</td>
+					<td>{rowData.username}</td>
+					<td>{rowData.address}</td>
+					<td>{rowData.write_date}</td>
+					<td>{rowData.content}</td>
+				</tr>
+			))}
+			<div>
+				글 작성하기
+				<Link to='/write'>
 					<input
 						type='button'
-						value='write'
-						className='write'
-						onClick={onClickBtn}></input>
-				</div>
-			</body>
+						value='Write content'
+						className='write'></input>
+				</Link>
+			</div>
 		</div>
 	);
 };
