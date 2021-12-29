@@ -1,9 +1,11 @@
 // import axios from 'axios';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Main = () => {
+const Main = ({user, setLoginUser}) => {
+	const navigate = useNavigate();
+
 	const [lastIdx, setLastIdx] = useState(0);
 	const [inputData, setInputData] = useState([
 		{
@@ -67,8 +69,8 @@ const Main = () => {
 			<div>글 리스트</div>
 			{inputData.map((rowData) => (
 				<tr>
-					<td>{rowData.title}</td>
 					<td>{rowData.username}</td>
+					<td>{rowData.title}</td>
 					<td>{rowData.address}</td>
 					<td>{rowData.write_date}</td>
 					<td>{rowData.content}</td>
@@ -76,13 +78,14 @@ const Main = () => {
 			))}
 			<div>
 				글 작성하기
-				<Link to='/write'>
 					<input
 						type='button'
 						value='Write content'
-						className='write'></input>
-				</Link>
+						className='write'
+						onClick= {() => navigate("/write")}
+						></input>
 			</div>
+			<input type='button' value='Logout' onClick ={()=> setLoginUser({})}></input>
 		</div>
 	);
 };

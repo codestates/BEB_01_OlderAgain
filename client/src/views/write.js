@@ -1,8 +1,11 @@
 // import axios from 'axios';
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Write = () => {
+const Write = ({user, setLoginUser}) => {
+	const navigate = useNavigate();
+
 	const [title, setTitle] = useState('');
 	const [content, setContent] = useState('');
 	const [userName, setUserName] = useState('');
@@ -12,12 +15,12 @@ const Write = () => {
 		await axios
 			.post('http://localhost:8888/app/write', {
 				title: title,
-				username: userName,
+				username: user.username,
 				address: address,
 				content: content,
 			})
 			.then((res) => {
-				window.location.href = 'http://localhost:3000/main';
+				navigate('/main');
 			})
 			.catch((err) => {
 				console.log(err);
@@ -36,6 +39,13 @@ const Write = () => {
 				</tbody>
 			</table>
 			<div>글 작성</div>
+
+			<div>
+				<div className='userName'>
+					작성자: {user.username}
+				</div>
+			</div>
+
 			<div className='title'>
 				제목
 				<input
@@ -46,17 +56,7 @@ const Write = () => {
 					}}
 					className='title'></input>
 			</div>
-			<div>
-				<div className='userName'>
-					작성자
-					<input
-						type='text'
-						value={userName}
-						onChange={(e) => setUserName(e.target.value)}
-						className='userNameInput'
-					/>
-				</div>
-			</div>
+
 			<div>
 				<div className='address'>
 					지갑 주소
