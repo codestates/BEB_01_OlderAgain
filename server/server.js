@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require ('mongoose');
 const dotenv =  require('dotenv');
-const routesURLs = require('./routes/routes');
 const cors = require('cors');
+
+const routesURLs = require('./routes/routes');
 
 dotenv.config();
 
@@ -10,7 +11,7 @@ const app = express();
 
 
 const PORT = process.env.PORT;
-const port = PORT || 8000;
+const port = PORT || 8888;
 
 mongoose.connect(process.env.DB_ACCESS, ()=>console.log("Database connected"))
 

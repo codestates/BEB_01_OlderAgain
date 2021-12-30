@@ -1,25 +1,33 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
-const Login = () => {
-	const [userName, setUserName] = useState('');
-	const [password, setPassword] = useState('');
+const Login = ({setLoginUser}) => {
+	const navigate = useNavigate()
 
-	const onClickBtn = async (e) => {
-		await axios
-			.post('http://localhost:8888/app/signup', {
-				"username": userName,
-				"password": password,
-			})
-			.then((res) => {
-				console.log(res);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
+	const [user, setUser] = useState({
+		username:"",
+		password:""
+	})
+
+	const handleChange = e => {
+		const {name, value} = e.target
+		setUser({
+			...user,
+			[name]: value
+		})
+	}
+
+	const login = () => {
+		axios.post("http://localhost:8888/app/login", user)
+		.then(res => {
+			alert(res.data.message)
+			setLoginUser(res.data.user)
+			navigate("/main")
+		})
+	}
+
 
 	return (
 		<>
@@ -27,19 +35,19 @@ const Login = () => {
 				아이디
 				<input
 					type='text'
-					value={userName}
-					onChange={(e) => {
-						setUserName(e.target.value);
-					}}
+					name='username'
+					value={user.username}
+					onChange={handleChange}
 					className='userName'></input>
 			</div>
 			<div>
 				<div className='password'>
 					비밀번호
 					<input
-						type='text'
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
+						type='password'
+						name='password'
+						value={user.password}
+						onChange={handleChange}
 						className='password'
 					/>
 				</div>
@@ -49,15 +57,14 @@ const Login = () => {
 					type='button'
 					value='login'
 					className='login'
-					onClick={onClickBtn}></input>
+					onClick={login}></input>
 				
-				<Link to='/signup'>
 				<input
 					type='button'
 					value='Go To SignUp'
-					className='signup'>
+					className='signup'
+					onClick={() => navigate("/signup")}>
 				</input>
-				</Link>
 			</div>
 		</>
 	);
