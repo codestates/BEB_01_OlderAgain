@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Write = ({user, setLoginUser}) => {
+const Write = ({ user, setLoginUser }) => {
 	const navigate = useNavigate();
 
 	const [title, setTitle] = useState('');
@@ -20,6 +20,7 @@ const Write = ({user, setLoginUser}) => {
 				content: content,
 			})
 			.then((res) => {
+				alert('1 OAT 지급완료!');
 				navigate('/main');
 			})
 			.catch((err) => {
@@ -41,9 +42,7 @@ const Write = ({user, setLoginUser}) => {
 			<div>글 작성</div>
 
 			<div>
-				<div className='userName'>
-					작성자: {user.username}
-				</div>
+				<div className='userName'>작성자: {user.username}</div>
 			</div>
 
 			<div className='title'>

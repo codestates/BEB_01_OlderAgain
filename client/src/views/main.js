@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Main = ({user, setLoginUser}) => {
+const Main = ({ user, setLoginUser }) => {
 	const navigate = useNavigate();
 
 	const [lastIdx, setLastIdx] = useState(0);
@@ -37,22 +37,6 @@ const Main = ({user, setLoginUser}) => {
 		}
 	}, []);
 
-	console.log(inputData);
-
-	// const onClickBtn = async (e) => {
-	// 	console.log('aa');
-	// 	await axios
-	// 		.post('http://localhost:8000/write', {
-	// 			// userName:
-	// 		})
-	// 		.then((res) => {
-	// 			console.log(res);
-	// 		})
-	// 		.catch((err) => {
-	// 			console.log(err);
-	// 		});
-	// };
-
 	return (
 		<div>
 			<h2>메인 화면</h2>
@@ -60,32 +44,41 @@ const Main = ({user, setLoginUser}) => {
 				<tbody>
 					{/* <div>글 리스트</div> */}
 					<tr>
-						<td className='listTableIndex th'>index</td>
+						<td className='listTableIndex th'>user</td>
 						<td className='listTableTitle th'>title</td>
+						<td className='listTableTitle th'>address</td>
+						<td className='listTableTitle th'>date</td>
 						<td className='listTableTitle th'>contents</td>
 					</tr>
 				</tbody>
 			</table>
 			<div>글 리스트</div>
-			{inputData.map((rowData) => (
-				<tr>
-					<td>{rowData.username}</td>
-					<td>{rowData.title}</td>
-					<td>{rowData.address}</td>
-					<td>{rowData.write_date}</td>
-					<td>{rowData.content}</td>
-				</tr>
-			))}
+			<table>
+				<tbody>
+					{inputData.map((rowData) => (
+						<tr>
+							<td>{rowData.username}</td>
+							<td>{rowData.title}</td>
+							<td>{rowData.address}</td>
+							<td>{rowData.write_date}</td>
+							<td>{rowData.content}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+
 			<div>
 				글 작성하기
-					<input
-						type='button'
-						value='Write content'
-						className='write'
-						onClick= {() => navigate("/write")}
-						></input>
+				<input
+					type='button'
+					value='Write content'
+					className='write'
+					onClick={() => navigate('/write')}></input>
 			</div>
-			<input type='button' value='Logout' onClick ={()=> setLoginUser({})}></input>
+			<input
+				type='button'
+				value='Logout'
+				onClick={() => setLoginUser({})}></input>
 		</div>
 	);
 };
