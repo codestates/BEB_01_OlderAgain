@@ -92,21 +92,21 @@ router.post('/write', async (req, res) => {
 
 	contentsWrite
 		.save()
-		.then(async (data) => {
+		.then((data) => {
+			// 디비 저장 후 프론트에 응답 후 블록체인 통신 (tx : sign,send transaction => send)
+			ercContract.methods
+				.transfer(req.body.address, web3.utils.toWei('1', 'ether'))
+				.send(
+					{ from: serverAddress, gasprice: 100, gas: 100000 },
+					(err, res) => {
+						console.log(res);
+					}
+				);
 			res.json(data);
 		})
 		.catch((err) => {
 			res.json(err);
 		});
-	// 디비 저장 후 프론트에 응답 후 블록체인 통신 (tx : sign,send transaction => send)
-	await ercContract.methods
-		.transfer(req.body.address, web3.utils.toWei('1', 'ether'))
-		.send(
-			{ from: serverAddress, gasprice: 100, gas: 100000 },
-			(err, res) => {
-				console.log(res);
-			}
-		);
 });
 
 // server 계정(ganache 0번 계정) erc20(OAT) 토큰 받기
