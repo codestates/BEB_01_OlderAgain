@@ -126,4 +126,45 @@ router.get('/tokenfaucet', async (req, res) => {
 		);
 });
 
+// user send OAT Token
+router.post('/transferToken', async (req, res) => {
+	let amount = req.body.amount;
+	let recipient = req.body.recipient;
+	const address = req.body.address;
+
+	const web3 = new Web3(
+		new Web3.providers.HttpProvider('http://127.0.0.1:7545')
+	);
+	web3.eth.accounts.wallet.add(
+		'5c875e52d1ce4ae326d2fc208f933bf20316fdabf045205668041fa455114633'
+	); // 유저의 개인키 -> 디비에 유저의 개인키를 따로 보관하지 않아서 가라고 넣었음 : 가나슈 1,2,3... 등 계정이나 회원가입한 계정
+
+	const ercContract = new web3.eth.Contract(erc20Abi, erc20Addr);
+	const balance = web3.utils.fromWei(
+		await ercContract.methods.balanceOf(address).call(),
+		'ether'
+	); // 유저의 잔여 토큰 갯수
+
+	if (amount > parseInt(balance)) {
+		res.json({ message: '잔여 토큰 부족' });
+	} else {
+		await ercContract.methods
+			.transfer(recipient, web3.utils.toWei(amount, 'ether'))
+			.send(
+				{
+					from: address,
+					gasprice: 100,
+					gas: 100000,
+				},
+				(err, result) => {
+					// console.log(result);
+					res.json({ message: '토큰 전송 성공' });
+				}
+			);
+	}
+});
+
+// mintNFT ONFT
+router.get('/mintNFT', async (req, res) => {});
+
 module.exports = router;

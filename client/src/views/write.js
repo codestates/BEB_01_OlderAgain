@@ -10,6 +10,8 @@ const Write = ({ user, setLoginUser }) => {
 	const [content, setContent] = useState('');
 	const [userName, setUserName] = useState('');
 	const [address, setAddress] = useState('');
+	const [recipient, setRecipient] = useState('');
+	const [amount, setAmount] = useState(0);
 
 	const onClickBtn = async (e) => {
 		await axios
@@ -21,6 +23,22 @@ const Write = ({ user, setLoginUser }) => {
 			})
 			.then((res) => {
 				alert('1 OAT 지급완료!');
+				navigate('/main');
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
+	const onClickBtnTransferToken = async (e) => {
+		await axios
+			.post('http://localhost:8888/app/transferToken', {
+				address: address,
+				recipient: recipient,
+				amount: amount,
+			})
+			.then((res) => {
+				alert(res.data.message);
 				navigate('/main');
 			})
 			.catch((err) => {
@@ -84,6 +102,31 @@ const Write = ({ user, setLoginUser }) => {
 					value='writeContent'
 					className='writeContent'
 					onClick={onClickBtn}></input>
+			</div>
+			<div>
+				OAT 전송
+				<div>위 작성자 지갑 주소를 작성해주세요</div>
+				<div className='recipient'>
+					토큰 받을 유저
+					<input
+						type='text'
+						value={recipient}
+						onChange={(e) => setRecipient(e.target.value)}
+						className='recipientInput'
+					/>
+					전송 할 토큰 양
+					<input
+						type='number'
+						value={amount}
+						onChange={(e) => setAmount(e.target.value)}
+						className='amount'
+					/>
+				</div>
+				<input
+					type='button'
+					value='transferToken'
+					className='transferToken'
+					onClick={onClickBtnTransferToken}></input>
 			</div>
 		</div>
 	);
