@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Main = ({ user, setLoginUser}) => {
+const Main = ({ user, setLoginUser }) => {
 	const navigate = useNavigate();
 
 	const [web3, setWeb3] = useState();
@@ -20,7 +20,7 @@ const Main = ({ user, setLoginUser}) => {
 		},
 	]);
 
-/* 	useEffect(() => {
+	/* 	useEffect(() => {
 		const walletData = window.localStorage.getItem('wallet');
 		setWallet(JSON.parse(walletData));
 	  }, []);
@@ -51,53 +51,51 @@ const Main = ({ user, setLoginUser}) => {
 		getTables();
 	}, []);
 
-
-
 	return (
-		<div>
-			<h2>메인 화면 </h2>
-
-			
-			<div>글 리스트</div>
-			<table className='listTable'>
-				<tbody>
+		<div className='container'>
+			<h2> Main </h2>
+			<table className='highlight'>
+				<thead>
 					{/* <div>글 리스트</div> */}
 					<tr>
-						<td className='listTableIndex th'>user</td>
-						<td className='listTableTitle th'>title</td>
-						<td className='listTableTitle th'>address</td>
-						<td className='listTableTitle th'>date</td>
-						<td className='listTableTitle th'>contents</td>
+						<th className='listTableIndex th'>user</th>
+						<th className='listTableTitle th'>title</th>
+						<th className='listTableTitle th'>address</th>
+						<th className='listTableTitle th'>date</th>
+						<th className='listTableTitle th'>contents</th>
 					</tr>
-				</tbody>
-			</table>
-			
-			<table>
+				</thead>
+
 				<tbody>
 					{inputData.map((rowData) => (
 						<tr>
 							<td>{rowData.username}</td>
 							<td>{rowData.title}</td>
-							<td>{rowData.address}</td>
-							<td>{rowData.write_date}</td>
+							<td>{rowData.address.substring(0, 6) + '...'}</td>
+							<td>{rowData.write_date.substring(0, 10)}</td>
 							<td>{rowData.content}</td>
 						</tr>
 					))}
 				</tbody>
 			</table>
 
-			<div>
-				글 작성하기
-				<input
-					type='button'
-					value='Write content'
-					className='write'
-					onClick={() => navigate('/write')}></input>
+			<div className='row'>
+				<h5>Write Content</h5>
+				<div className='col 12'>
+					<input
+						type='button'
+						value='Write content'
+						className='btn waves-effect lighten-2'
+						onClick={() => navigate('/write')}></input>
+				</div>
+				<div className='col 12'>
+					<input
+						type='button'
+						value='Logout'
+						className='btn waves-effect blue lighten-2'
+						onClick={() => setLoginUser({})}></input>
+				</div>
 			</div>
-			<input
-				type='button'
-				value='Logout'
-				onClick={() => setLoginUser({})}></input>
 		</div>
 	);
 };
