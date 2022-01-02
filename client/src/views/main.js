@@ -3,10 +3,12 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Main = ({ user, setLoginUser }) => {
+const Main = ({ user, setLoginUser}) => {
 	const navigate = useNavigate();
 
-	const [lastIdx, setLastIdx] = useState(0);
+	const [web3, setWeb3] = useState();
+	//const [lastIdx, setLastIdx] = useState(0);
+	const [wallet, setWallet] = useState();
 	const [inputData, setInputData] = useState([
 		{
 			// idx: '',
@@ -18,28 +20,45 @@ const Main = ({ user, setLoginUser }) => {
 		},
 	]);
 
-	useEffect(async () => {
-		try {
-			const res = await axios.get(
-				'http://localhost:8888/app/contentList'
-			);
-			const _inputData = await res.data.map((rowData) => ({
-				// idx: rowData.idx,
-				title: rowData.title,
-				username: rowData.username,
-				address: rowData.address,
-				write_date: rowData.date,
-				content: rowData.content,
-			}));
-			setInputData(inputData.concat(_inputData));
-		} catch (err) {
-			console.log(err);
+/* 	useEffect(() => {
+		const walletData = window.localStorage.getItem('wallet');
+		setWallet(JSON.parse(walletData));
+	  }, []);
+	
+	useEffect(()=>{
+		window.localStorage.setItem('wallet', wallet);
+	}); */
+
+	useEffect(() => {
+		async function getTables() {
+			try {
+				const res = await axios.get(
+					'http://localhost:8888/app/contentList'
+				);
+				const _inputData = await res.data.map((rowData) => ({
+					// idx: rowData.idx,
+					title: rowData.title,
+					username: rowData.username,
+					address: rowData.address,
+					write_date: rowData.date,
+					content: rowData.content,
+				}));
+				setInputData(inputData.concat(_inputData));
+			} catch (err) {
+				console.log(err);
+			}
 		}
+		getTables();
 	}, []);
+
+
 
 	return (
 		<div>
-			<h2>메인 화면</h2>
+			<h2>메인 화면 </h2>
+
+			
+			<div>글 리스트</div>
 			<table className='listTable'>
 				<tbody>
 					{/* <div>글 리스트</div> */}
@@ -52,7 +71,7 @@ const Main = ({ user, setLoginUser }) => {
 					</tr>
 				</tbody>
 			</table>
-			<div>글 리스트</div>
+			
 			<table>
 				<tbody>
 					{inputData.map((rowData) => (
