@@ -1,9 +1,10 @@
 // import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Web3 from 'web3';
 import { useNavigate } from 'react-router-dom';
 
-const Write = ({ user, setLoginUser }) => {
+const Write = ({ user, setLoginUser}) => {
 	const navigate = useNavigate();
 
 	const [title, setTitle] = useState('');
@@ -12,6 +13,31 @@ const Write = ({ user, setLoginUser }) => {
 	const [address, setAddress] = useState('');
 	const [recipient, setRecipient] = useState('');
 	const [amount, setAmount] = useState(0);
+	const [web3, setWeb3] = useState();
+	const [wallet, setWallet] = useState();
+
+
+	useEffect( () => {
+		async function connectWeb3() {
+			if (typeof(window.ethereum) !== "undefined") {
+				try {
+					const web = new Web3(window.ethereum);
+					setWeb3(web);
+				} catch (err) {
+					console.log(err);
+				}
+			}
+		}
+		connectWeb3();
+	}, []);
+
+	const connectWallet = async() => {
+		var accounts = await window.ethereum.request({
+			method: 'eth_requestAccounts'
+		});
+
+		setWallet(accounts[0]);
+	}
 
 	const onClickBtn = async (e) => {
 		await axios
@@ -45,19 +71,23 @@ const Write = ({ user, setLoginUser }) => {
 				console.log(err);
 			});
 	};
-
-	return (
+	console.log(user.date);
+		return (
 		<div>
 			<h2>글 작성</h2>
-			<table className='listTable'>
+			<div>토큰 발행은 10분마다 1번씩 가능합니다.</div>
+{/* 			<table className='listTable'>
 				<tbody>
 					<tr>
 						<td className='listTableIndex th'>index</td>
 						<td className='listTableTitle th'>title</td>
 					</tr>
 				</tbody>
-			</table>
+			</table> */}
 			<div>글 작성</div>
+
+			<input type='button' value='Connect Metamask' onClick={connectWallet}></input>
+			<div className='wallet'>주소: {wallet}</div>
 
 			<div>
 				<div className='userName'>작성자: {user.username}</div>
@@ -74,7 +104,7 @@ const Write = ({ user, setLoginUser }) => {
 					className='title'></input>
 			</div>
 
-			<div>
+{/* 			<div>
 				<div className='address'>
 					지갑 주소
 					<input
@@ -84,7 +114,7 @@ const Write = ({ user, setLoginUser }) => {
 						className='addressInput'
 					/>
 				</div>
-			</div>
+			</div> */}
 			<div>
 				<div className='content'>
 					글내용
@@ -102,8 +132,9 @@ const Write = ({ user, setLoginUser }) => {
 					value='writeContent'
 					className='writeContent'
 					onClick={onClickBtn}></input>
+				<input type='button' value='Go Back' className='goBack' onClick={()=>navigate('/main')}></input>
 			</div>
-			<div>
+			{/* <div>
 				OAT 전송
 				<div>위 작성자 지갑 주소를 작성해주세요</div>
 				<div className='recipient'>
@@ -127,7 +158,7 @@ const Write = ({ user, setLoginUser }) => {
 					value='transferToken'
 					className='transferToken'
 					onClick={onClickBtnTransferToken}></input>
-			</div>
+			</div> */}
 		</div>
 	);
 };
