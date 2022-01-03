@@ -4,8 +4,8 @@ const signUpTemplateCopy = require('../models/SignupModels');
 const contentsTemplateCopy = require('../models/ContentsModels');
 const mongoose = require('mongoose');
 const Web3 = require('web3');
-const { erc20Abi, erc721Abi } = require('../abi');
-const erc20Addr = require('../erc20Addr');
+const { erc20Abi, erc721Abi, rinkeby20Abi } = require('../abi');
+const {erc20Addr, rinkebyAddr} = require('../erc20Addr');
 const erc721Addr = require('../erc721Addr');
 const serverAddress = '0xa96A7BA2ECD32760dD11b640EE2c6090B5Da81c6'; // ganache 0번 계정
 const serverPrivateKey =
@@ -66,6 +66,38 @@ router.post('/login', (req, res) => {
 	});
 });
 
+router.post('/datecheck', async (req, res) => {
+	const {username} = req.body;
+	/* const web3 = await new Web3(
+		new Web3.providers.HttpProvider('http://127.0.0.1:7545')
+	);
+	web3.eth.accounts.wallet.add(serverPrivateKey);
+	const ercContract = new web3.eth.Contract(erc20Abi, erc20Addr); */
+
+	signUpTemplateCopy.findOne({username:username}, (err, user)=>{
+		if (user) {
+			var d1 = new Date();
+			const mindiff = ((d1-user.date)/1000)/60;
+
+			if (mindiff > 5){
+				/* ercContract.methods
+				.transfer(req.body.address, web3.utils.toWei('1', 'ether'))
+				.send(
+					{ from: serverAddress, gasprice: 100, gas: 100000 },
+					(err, res) => {
+						console.log(res);
+					}
+				); */
+				user.date = new Date();
+				user.save();
+				res.send({message:'True'})
+			} else {
+				res.send({message:'False'})
+			}
+		}
+	})
+})
+
 router.get('/contentList', (req, res) => {
 	try {
 		contentsTemplateCopy.find({}, (e, result) => {
@@ -84,24 +116,24 @@ router.post('/write', async (req, res) => {
 		content: req.body.content,
 	});
 
-	const web3 = await new Web3(
+/* 	const web3 = await new Web3(
 		new Web3.providers.HttpProvider('http://127.0.0.1:7545')
 	);
 	web3.eth.accounts.wallet.add(serverPrivateKey);
-	const ercContract = new web3.eth.Contract(erc20Abi, erc20Addr);
+	const ercContract = new web3.eth.Contract(erc20Abi, erc20Addr); */
 
 	contentsWrite
 		.save()
 		.then((data) => {
 			// 디비 저장 후 프론트에 응답 후 블록체인 통신 (tx : sign,send transaction => send)
-			ercContract.methods
+/* 			ercContract.methods
 				.transfer(req.body.address, web3.utils.toWei('1', 'ether'))
 				.send(
 					{ from: serverAddress, gasprice: 100, gas: 100000 },
 					(err, res) => {
 						console.log(res);
 					}
-				);
+				); */
 			res.json(data);
 		})
 		.catch((err) => {

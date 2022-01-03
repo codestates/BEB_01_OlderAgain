@@ -43,22 +43,29 @@ const Write = ({ user, setLoginUser }) => {
 			.post('http://localhost:8888/app/write', {
 				title: title,
 				username: user.username,
-				address: address,
+				address: wallet,
 				content: content,
-			})
-			.then((res) => {
-				alert('1 OAT 지급완료!');
-				navigate('/main');
 			})
 			.catch((err) => {
 				console.log(err);
 			});
+		await axios.post('http://localhost:8888/app/datecheck', user).then((res)=>{
+				if (res.data.message === 'True'){
+					console.log('you get token')
+				}
+				if (res.data.mesagge === 'False'){
+					console.log('nope')
+				}
+
+			});
+		
+		
 	};
 
 	const onClickBtnTransferToken = async (e) => {
 		await axios
 			.post('http://localhost:8888/app/transferToken', {
-				address: address,
+				address: wallet,
 				recipient: recipient,
 				amount: amount,
 			})
@@ -70,7 +77,9 @@ const Write = ({ user, setLoginUser }) => {
 				console.log(err);
 			});
 	};
-	console.log(user.date);
+	
+
+
 	return (
 		<div className='container'>
 			<link
